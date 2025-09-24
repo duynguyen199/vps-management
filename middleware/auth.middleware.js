@@ -1,9 +1,10 @@
 const jwt= require("jsonwebtoken");
 const { SECRETKEY } = require("../configs/configuration");
+const UserModel = require("../model/User.model");
 
 module.exports=async(req,res,next)=>{
     const authHeader = req.headers.authorization;
-    if(!authHeader || !authHeader.starwith('Bearer')){
+    if(!authHeader || !authHeader.startsWith('Bearer')){
         throw new ErrorResponse(401,'Unauthorized')
     }
 
@@ -13,9 +14,9 @@ module.exports=async(req,res,next)=>{
     }
     const payload = jwt.verify(token,SECRETKEY)
     if(!payload){
-        throw new ErrorResponse(403,'Fobiidden from access ')
+        throw new ErrorResponse(403,'Fobidden from access ')
     }
-    const user = await UserModel.findbyId(payload._id)
+    const user = await UserModel.findById(payload._id)
     if(!user){
         throw new ErrorResponse(404,'NOT FOUND USER')
     }

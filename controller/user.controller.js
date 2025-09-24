@@ -1,3 +1,4 @@
+const ErrorResponse = require("../helper/ErrorResponse");
 const UserModel = require("../model/User.model");
 
 module.exports = {
@@ -36,6 +37,20 @@ module.exports = {
     } catch (error) {
     res.status(500).json({ message: 'Error updating user.', error: error.message });
     }
+  },
+  getAccountBalance: async(req,next,js)=>{
+      const userId = req.user._id
+      if(!userId){
+        throw new ErrorResponse(404,"Not found user")
+
+      }
+      const user = await UserModel.findById(userId).select("balance")
+      res.status(200).json({
+        balance:user.balance,
+        success:true
+      })
   }
 
 };
+
+

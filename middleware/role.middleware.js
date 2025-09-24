@@ -1,3 +1,5 @@
+const ErrorResponse = require("../helper/ErrorResponse")
+
 module.exports = (roles)=>{
     if(typeof roles === "string"){
         roles=[roles]
