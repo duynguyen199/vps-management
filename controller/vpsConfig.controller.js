@@ -7,8 +7,8 @@ module.exports = {
   createVPS: async (req, res) => {
     const { error, value } = vpsConfigValidate(req.body);
     if (error) throw new ErrorResponse(400, "bad request for create vps ");
-    const newVps = await VPSConfigModel.create(value);
-    return res.status(201).json(newVps);
+    const newVpsConfig = await VPSConfigModel.create(value);
+    return res.status(201).json(newVpsConfig);
   },
   getAllVPS: async (req, res) => {
     const {
@@ -79,13 +79,13 @@ module.exports = {
     const id = req.params.id;
     const {error,value} = vpsConfigValidate(req.body)
     if(error){
-        throw new ErrorResponse(400,"Bad Request for update vps")
+        throw new ErrorResponse(400,"Bad Request for update vps config")
     }
     if (req.vpsConfig && req.vpsConfig._id.toString() !== id) {
         throw new ErrorResponse(403, "Unauthorized to update this VPS configuration");
       }
     const updatedVps = await VPSConfigModel.findByIdAndUpdate(id,value,{new:true})
-    return res.json(200).json({
+    return res.status(200).json({
         success:true,
         data:updatedVps
     })

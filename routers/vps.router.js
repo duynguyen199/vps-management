@@ -1,47 +1,49 @@
 const express = require("express");
 const asyncMiddleware = require("../middleware/asyncMiddleware");
 const authMiddleware = require("../middleware/auth.middleware");
-const roleMiddleware = require("../middleware/role.middleware");
 const typeUserRole = require("../constants/type.user.role");
-const {
-  getAllVPS,
-  getVpsById,
-  deleteVpsConfig,
-  updateVPSById,
-  createVPS,
-} = require("../controller/vpsConfig.controller");
-const vpsConfigRouter = express.Router();
+const { getAllVPS, getVpsById } = require("../controller/vpsConfig.controller");
+const roleMiddleware = require("../middleware/role.middleware");
+const { createVps, getVpsByConfigId, updateVpsById } = require("../controller/vps.controller");
+const vpsRouter = express.Router();
 
-vpsConfigRouter
+vpsRouter
   .route("/")
   .get(
     asyncMiddleware(authMiddleware),
     roleMiddleware([typeUserRole.ADMIN, typeUserRole.USER]),
     asyncMiddleware(getAllVPS)
   );
-vpsConfigRouter
-  .route("/createVPSCongig")
+
+vpsRouter
+  .route("/createVps")
   .post(
     asyncMiddleware(authMiddleware),
     roleMiddleware([typeUserRole.ADMIN]),
-    asyncMiddleware(createVPS)
+    asyncMiddleware(createVps)
   );
-
-vpsConfigRouter
+vpsRouter
+  .route("/by-config")
+  .get(
+    asyncMiddleware(authMiddleware),
+    roleMiddleware([typeUserRole.ADMIN, typeUserRole.USER]),
+    asyncMiddleware(getVpsByConfigId)
+  );
+vpsRouter
   .route("/:id")
   .get(
     asyncMiddleware(authMiddleware),
-    roleMiddleware([typeUserRole.ADMIN]),
+    roleMiddleware([typeUserRole.ADMIN, typeUserRole.USER]),
     asyncMiddleware(getVpsById)
   )
   .delete(
     asyncMiddleware(authMiddleware),
     roleMiddleware([typeUserRole.ADMIN]),
-    asyncMiddleware(deleteVpsConfig)
+    asyncMiddleware(getVpsById)
   )
   .put(
     asyncMiddleware(authMiddleware),
     roleMiddleware([typeUserRole.ADMIN]),
-    asyncMiddleware(updateVPSById)
+    asyncMiddleware(updateVpsById)
   );
-module.exports = vpsConfigRouter;
+  module.exports = vpsRouter
