@@ -27,6 +27,7 @@ module.exports = {
 
     return res.status(200).json({ ...payload, jwt: token });
   },
+
   register: async (req, res, next) => {
     const body = req.body;
 
@@ -35,4 +36,5 @@ module.exports = {
     const newUser = await UserModel.create(value);
     return res.status(201).json(newUser);
   },
+  
 };

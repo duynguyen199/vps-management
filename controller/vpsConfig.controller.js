@@ -6,7 +6,13 @@ const { vpsConfigValidate } = require("../validation/vpsConfigValid");
 module.exports = {
   createVPS: async (req, res) => {
     const { error, value } = vpsConfigValidate(req.body);
-    if (error) throw new ErrorResponse(400, "bad request for create vps ");
+
+    if (error) {
+      console.log(error.message);
+
+      throw new ErrorResponse(400, "bad request for create vps ");
+    }
+
     const newVpsConfig = await VPSConfigModel.create(value);
     return res.status(201).json(newVpsConfig);
   },
@@ -77,30 +83,35 @@ module.exports = {
   },
   updateVPSById: async (req, res) => {
     const id = req.params.id;
-    const {error,value} = vpsConfigValidate(req.body)
-    if(error){
-        throw new ErrorResponse(400,"Bad Request for update vps config")
+    const { error, value } = vpsConfigValidate(req.body);
+    if (error) {
+      throw new ErrorResponse(400, "Bad Request for update vps config");
     }
     if (req.vpsConfig && req.vpsConfig._id.toString() !== id) {
-        throw new ErrorResponse(403, "Unauthorized to update this VPS configuration");
-      }
-    const updatedVps = await VPSConfigModel.findByIdAndUpdate(id,value,{new:true})
+      throw new ErrorResponse(
+        403,
+        "Unauthorized to update this VPS configuration"
+      );
+    }
+    const updatedVps = await VPSConfigModel.findByIdAndUpdate(id, value, {
+      new: true,
+    });
     return res.status(200).json({
-        success:true,
-        data:updatedVps
-    })
+      success: true,
+      data: updatedVps,
+    });
   },
-  deleteVpsConfig: async(req,res)=>{
+  deleteVpsConfig: async (req, res) => {
     const id = req.params.id;
     const deletedConfig = await VPSConfigModel.findByIdAndDelete(id);
 
-      if (!deletedConfig) {
-        throw new ErrorResponse(404, "VPS configuration not found");
-      }
+    if (!deletedConfig) {
+      throw new ErrorResponse(404, "VPS configuration not found");
+    }
 
-      return res.status(200).json({
-        success: true,
-        message: "VPS configuration deleted successfully",
-      }); 
-  }
+    return res.status(200).json({
+      success: true,
+      message: "VPS configuration deleted successfully",
+    });
+  },
 };

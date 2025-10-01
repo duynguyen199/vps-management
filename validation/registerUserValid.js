@@ -39,7 +39,7 @@ const registerUserSchema = Joi.object({
     .max(16)
     .pattern(new RegExp(/^[a-zA-Z0-9@$!%*.?&]{6,16}$/))
     .required(),
-  balance:Joi.number().min(0).required()
+
 });
 
 module.exports = {

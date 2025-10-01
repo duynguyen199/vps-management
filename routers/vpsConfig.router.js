@@ -23,7 +23,7 @@ vpsConfigRouter
   .route("/createVPSCongig")
   .post(
     asyncMiddleware(authMiddleware),
-    roleMiddleware([typeUserRole.ADMIN]),
+    roleMiddleware([typeUserRole.ADMIN,typeUserRole.USER]),
     asyncMiddleware(createVPS)
   );
 
@@ -31,7 +31,7 @@ vpsConfigRouter
   .route("/:id")
   .get(
     asyncMiddleware(authMiddleware),
-    roleMiddleware([typeUserRole.ADMIN]),
+    roleMiddleware([typeUserRole.ADMIN,typeUserRole.USER]),
     asyncMiddleware(getVpsById)
   )
   .delete(

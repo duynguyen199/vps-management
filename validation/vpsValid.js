@@ -7,7 +7,7 @@ const vpsSchema = Joi.object({
   os: Joi.string().required().min(2).max(20),
   status: Joi.string()
     .valid(...Object.values(vpsStatus)),
-  vpsConfigId: Joi.string().required()
+  vpsConfigId: Joi.string()
     .pattern(/^[0-9a-fA-F]{24}$/), // Validates MongoDB ObjectId
 }).options({ abortEarly: false });
 

@@ -1,49 +1,50 @@
 const express = require("express");
 const asyncMiddleware = require("../middleware/asyncMiddleware");
 const authMiddleware = require("../middleware/auth.middleware");
-const typeUserRole = require("../constants/type.user.role");
-const { getAllVPS, getVpsById } = require("../controller/vpsConfig.controller");
 const roleMiddleware = require("../middleware/role.middleware");
-const { createVps, getVpsByConfigId, updateVpsById, getAllVps } = require("../controller/vps.controller");
-const vpsRouter = express.Router();
+const typeUserRole = require("../constants/type.user.role");
+const {
+  createBank,
+  getAllBanks,
+  getBankById,
+  deleteBankById,
+  updateBank,
+} = require("../controller/bank.controller");
+const bankRouter = express.Router();
 
-vpsRouter
+bankRouter
+  .route("/createBank")
+  .post(
+    asyncMiddleware(authMiddleware),
+    roleMiddleware([typeUserRole.ADMIN]),
+    asyncMiddleware(createBank)
+  );
+
+bankRouter
   .route("/")
   .get(
     asyncMiddleware(authMiddleware),
     roleMiddleware([typeUserRole.ADMIN, typeUserRole.USER]),
-    asyncMiddleware(getAllVps)
+    asyncMiddleware(getAllBanks)
   );
 
-vpsRouter
-  .route("/createVps")
-  .post(
-    asyncMiddleware(authMiddleware),
-    roleMiddleware([typeUserRole.ADMIN]),
-    asyncMiddleware(createVps)
-  );
-vpsRouter
-  .route("/:vpsConfigId")
-  .get(
-    asyncMiddleware(authMiddleware),
-    roleMiddleware([typeUserRole.ADMIN, typeUserRole.USER]),
-    asyncMiddleware(getVpsByConfigId)
-  );
-vpsRouter
+bankRouter
   .route("/:id")
   .get(
     asyncMiddleware(authMiddleware),
     roleMiddleware([typeUserRole.ADMIN, typeUserRole.USER]),
-    asyncMiddleware(getVpsById)
+    asyncMiddleware(getBankById)
   )
   .delete(
     asyncMiddleware(authMiddleware),
     roleMiddleware([typeUserRole.ADMIN]),
-    asyncMiddleware(getVpsById)
+    asyncMiddleware(deleteBankById)
   )
   .put(
     asyncMiddleware(authMiddleware),
     roleMiddleware([typeUserRole.ADMIN]),
-    asyncMiddleware(updateVpsById)
+    asyncMiddleware(updateBank)
   );
-  module.exports = vpsRouter
+
+
+  module.exports = bankRouter
